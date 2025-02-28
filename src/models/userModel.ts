@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { z } from 'zod';
 
 interface IUser extends Document {
   username: string;
@@ -33,7 +34,22 @@ const userSchema: Schema = new Schema(
   }
 );
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
+
+// Define the zod schema for user input validation
+const userSchemaZod = z.object({
+  username: z.string().min(1, 'Please provide a name'),
+  email: z.string().email('Please provide a valid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+  role: z.enum(['user', 'admin']).default('user'),
+});
+
+const userLoginSchemaZod = z.object({
+  email: z.string().email('Please provide a valid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+type IUserInputZod = z.infer<typeof userSchemaZod>;
 
 export default User;
-export { IUser };
+export { IUser, userSchemaZod, IUserInputZod,userLoginSchemaZod };

@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import {  addReview, getReviews, deleteReview } from '../services/reviewService';
-
+import {reviewSchemaZod} from '../models/reviewModel';
+import {z} from 'zod';
 const addReviewController = async (req: Request, res: Response): Promise<void> => {
     try {
+        
         await addReview(req, res);
     } catch (error) {
         console.error('Error adding review:', error);

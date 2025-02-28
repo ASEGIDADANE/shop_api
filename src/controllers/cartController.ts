@@ -1,13 +1,20 @@
 import { Request, Response } from 'express';
 import Cart from '../models/cartModel';
 import { addToCart, removefromcart, getcart, clearcart } from '../services/cartService';
+import {addToCartSchemaZod} from '../models/cartModel';
+import { z} from 'zod';
+
+
+
 
 const addToCartController = async (req: Request, res: Response): Promise<void> => {
     try {
-        const data = req.body;
-        console.log(data);
+        const validatedData = addToCartSchemaZod.parse(req.body);
+
+        const data = validatedData;
+   
         const cart = await addToCart(data);
-        console.log(cart);
+      
         res.status(200).json(cart);
     } catch (error) {
         console.error('Error adding to cart:', error);

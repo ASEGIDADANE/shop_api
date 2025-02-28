@@ -6,7 +6,7 @@ import { placeOrder, getorder,  getuserorder,   updateOrderStatus } from '../ser
 const placeOrderController = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.body.userId;
-        console.log('userId:', userId);
+        
         
         const order = await placeOrder(userId);
         res.status(200).json(order);

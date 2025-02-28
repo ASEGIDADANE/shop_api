@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { createUser, loginUser } from '../services/authService';
+import { userSchemaZod,userLoginSchemaZod } from '../models/userModel';
 
 const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body);
-    const userData = req.body;
-    console.log(userData
-    );
+    const validatedData = userSchemaZod.parse(req.body);
+   
+    const userData = validatedData;
+  ;
     const newUser = await createUser(userData);
     console.log(newUser);
     res.status(201).json(newUser);
@@ -17,7 +18,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
 
 const loginUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const loginData = req.body;
+    const loginData = userLoginSchemaZod.parse(req.body);
     const result = await loginUser(loginData);
     res.status(200).json(result);
   } catch (error) {

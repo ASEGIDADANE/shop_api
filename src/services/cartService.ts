@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
-// import mongoose from 'mongoose';
+
 import Cart from '../models/cartModel';
 import Product from '../models/productModel';
 import mongoose, { Document } from 'mongoose';
-import { ICartInput } from '../models/cartModel';
+import { ICartInput,cartSchemaZod,removeFromCartSchemaZod,userIDcartSchemaZod } from '../models/cartModel';
+import {z} from 'zod';
 
 const addToCart = async (data: { userId: string, productId: string, quantity: number }): Promise<Document> => {
+    
     const { userId, productId, quantity } = data;
   
     try {
@@ -62,7 +64,8 @@ const addToCart = async (data: { userId: string, productId: string, quantity: nu
   };
 
 const removefromcart = async (req: Request, res: Response): Promise<void> => {
-    const { userId, productId } = req.body;
+    const validatedDate = removeFromCartSchemaZod.parse(req.body);
+    const { userId, productId } = validatedDate;
     
     try {
         // Find the user's cart
@@ -103,13 +106,15 @@ const removefromcart = async (req: Request, res: Response): Promise<void> => {
     };
 
     const getcart = async (req: Request, res: Response): Promise<void> => {
-        const { userId } = req.body;
+      const validatedDate = userIDcartSchemaZod.parse(req.body);
+        const { userId } = validatedDate;
         const cart = await Cart.findOne({ user: userId }).exec();
         res.status(200).json(cart);
     };
 
     const clearcart = async (req: Request, res: Response): Promise<void> => {
-        const { userId } = req.body;
+      const validatedDate = userIDcartSchemaZod.parse(req.body);
+        const { userId } = validatedDate;
         console.log("userId");
         console.log(userId);
         const cart = await Cart.findOne({ user: userId }).exec();

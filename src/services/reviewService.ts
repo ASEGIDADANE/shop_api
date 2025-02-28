@@ -3,11 +3,15 @@ import mongoose from "mongoose";
 import Review from "../models/reviewModel"; 
 import product from "../models/productModel";
 import Order from "../models/orderModel";
+import {reviewSchemaZod} from '../models/reviewModel';
+import {z} from 'zod';
 
 const addReview = async (req: Request, res: Response): Promise<void> => {
-    const { userId, productId, rating, comment } = req.body;
+    const validateData = reviewSchemaZod.parse(req.body);
+    const { userId, productId, rating, comment } = validateData;
 
     try {
+      
 
         const foundProduct = await product.findById(productId).exec();
 
