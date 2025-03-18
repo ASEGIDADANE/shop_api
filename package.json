@@ -1,7 +1,7 @@
 {
   "name": "ecommerce_api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
